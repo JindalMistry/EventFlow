@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="EventFlow.API/EventFlow.API.csproj" />
+  <Project Path="EventFlow.Application/EventFlow.Application.csproj" />
+  <Project Path="EventFlow.Domain/EventFlow.Domain.csproj" />
+  <Project Path="EventFlow.Infrastructure/EventFlow.Infrastructure.csproj" />
+</Solution>
