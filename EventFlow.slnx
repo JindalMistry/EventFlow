@@ -1,6 +1,11 @@
 <Solution>
+  <Folder Name="/Solution Items/">
+    <File Path=".env" />
+    <File Path="docker-compose.yml" />
+  </Folder>
   <Project Path="EventFlow.API/EventFlow.API.csproj" />
   <Project Path="EventFlow.Application/EventFlow.Application.csproj" />
   <Project Path="EventFlow.Domain/EventFlow.Domain.csproj" />
   <Project Path="EventFlow.Infrastructure/EventFlow.Infrastructure.csproj" />
+  <Project Path="EventFlow.Worker/EventFlow.Worker.csproj" Id="79ff0b5f-243d-4b66-8832-20447a73c3eb" />
 </Solution>
