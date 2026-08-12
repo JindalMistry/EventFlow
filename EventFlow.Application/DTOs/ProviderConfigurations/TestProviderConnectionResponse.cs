@@ -1,0 +1,7 @@
+namespace EventFlow.Application.DTOs.ProviderConfigurations;
+
+public class TestProviderConnectionResponse
+{
+    public bool Success { get; set; }
+    public string Message { get; set; } = string.Empty;
+}
