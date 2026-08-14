@@ -1,18 +1,87 @@
 services:
+
   postgres:
     image: postgres:17
-
     container_name: eventflow-postgres
+    restart: unless-stopped
+
     environment:
       POSTGRES_DB: ${DB_NAME}
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
-    
+
     ports:
       - "2506:5432"
-    
+
     volumes:
-      - postgres-eventflow-data:/var/lib/postgresql/data  
+      - postgres-eventflow-data:/var/lib/postgresql/data
+
+  rabbitmq:
+    image: rabbitmq:4-management
+    container_name: eventflow-rabbitmq
+    restart: unless-stopped
+
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
+
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+    volumes:
+      - rabbitmq-eventflow-data:/var/lib/rabbitmq
+
+  api:
+    build:
+      context: .
+      dockerfile: EventFlow.API/Dockerfile
+
+    container_name: eventflow-api
+    restart: unless-stopped
+
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ASPNETCORE_URLS: http://+:8080
+
+      ConnectionStrings__DefaultConnection: ${DB_CONNECTION_STRING}
+
+      Jwt__Secret: ${JWT_SECRET}
+
+      RabbitMQ__Host: rabbitmq
+      RabbitMQ__Port: 5672
+      RabbitMQ__Username: ${RABBITMQ_USER}
+      RabbitMQ__Password: ${RABBITMQ_PASSWORD}
+
+    ports:
+      - "8080:8080"
+
+    depends_on:
+      - postgres
+      - rabbitmq
+
+  worker:
+    build:
+      context: .
+      dockerfile: EventFlow.Worker/Dockerfile
+
+    container_name: eventflow-worker
+    restart: unless-stopped
+
+    environment:
+      DOTNET_ENVIRONMENT: Production
+
+      ConnectionStrings__DefaultConnection: ${DB_CONNECTION_STRING}
+
+      RabbitMQ__Host: rabbitmq
+      RabbitMQ__Port: 5672
+      RabbitMQ__Username: ${RABBITMQ_USER}
+      RabbitMQ__Password: ${RABBITMQ_PASSWORD}
+
+    depends_on:
+      - postgres
+      - rabbitmq
 
 volumes:
   postgres-eventflow-data:
+  rabbitmq-eventflow-data:
