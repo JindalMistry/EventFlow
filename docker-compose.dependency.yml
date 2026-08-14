@@ -1,0 +1,32 @@
+services:
+  postgres:
+    image: postgres:17
+
+    container_name: eventflow-postgres
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    
+    ports:
+      - "2506:5432"
+    
+    volumes:
+      - postgres-eventflow-data:/var/lib/postgresql/data  
+  
+  rabbitmq:
+    image: rabbitmq:4-management
+    container_name: eventflow-rabbitmq
+    restart: unless-stopped
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - rabbitmq-eventflow-data:/var/lib/rabbitmq
+
+volumes:
+  postgres-eventflow-data:
+  rabbitmq-eventflow-data:
