@@ -1,6 +1,8 @@
 <Solution>
   <Folder Name="/Solution Items/">
+    <File Path=".dockerignore" />
     <File Path=".env" />
+    <File Path="docker-compose.dependency.yml" />
     <File Path="docker-compose.yml" />
   </Folder>
   <Project Path="EventFlow.API/EventFlow.API.csproj" />
