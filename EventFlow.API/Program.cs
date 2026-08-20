@@ -144,4 +144,13 @@ app.UseMiddleware<ExceptionMiddleware>();
 
 app.MapControllers();
 
+app.MapGet("/health", () =>
+{
+    return Results.Ok(new
+    {
+        status = "Healthy"
+    });
+})
+.AllowAnonymous();
+
 app.Run();
