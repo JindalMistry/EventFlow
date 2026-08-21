@@ -1,4 +1,4 @@
-name: AWS OIDC Test
+name: EventFlow AWS CI/CD Pipeline
 
 on:
   push:
@@ -32,3 +32,23 @@ jobs:
             docker login \
               --username AWS \
               --password-stdin 668774618445.dkr.ecr.ap-south-1.amazonaws.com
+
+      - name: Build API Image
+        run: |
+          docker build \
+            -t 668774618445.dkr.ecr.ap-south-1.amazonaws.com/eventflow-api:{{ github.sha }} \
+            ./EventFlow.API
+          
+      - name: Push API Image to ECR
+        run: |
+          docker push 668774618445.dkr.ecr.ap-south-1.amazonaws.com/eventflow-api:{{ github.sha }}
+        
+      - name: Build Worker Image
+        run: |
+          docker build \
+            -t 668774618445.dkr.ecr.ap-south-1.amazonaws.com/eventflow-worker:{{ github.sha }} \
+            ./EventFlow.Worker
+
+      - name: Push Worker Image to ECR
+        run: |
+          docker push 668774618445.dkr.ecr.ap-south-1.amazonaws.com/eventflow-worker:{{ github.sha }}
