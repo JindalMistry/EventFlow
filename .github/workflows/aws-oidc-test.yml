@@ -39,8 +39,9 @@ jobs:
       - name: Build API Image
         run: |
           docker build \
+            -f ./EventFlow.API/Dockerfile \
             -t 668774618445.dkr.ecr.ap-south-1.amazonaws.com/eventflow-api:${{ github.sha }} \
-            ./EventFlow.API
+            .
           
       - name: Push API Image to ECR
         run: |
@@ -49,8 +50,9 @@ jobs:
       - name: Build Worker Image
         run: |
           docker build \
+            -f ./EventFlow.Worker/Dockerfile \
             -t 668774618445.dkr.ecr.ap-south-1.amazonaws.com/eventflow-worker:${{ github.sha }} \
-            ./EventFlow.Worker
+            .
 
       - name: Push Worker Image to ECR
         run: |
