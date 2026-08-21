@@ -1,25 +1,51 @@
 name: AWS OIDC Test
 
 on:
-    push:
-        branches:
-            - release/*
-    workflow_dispatch:
-        
+  push:
+    branches:
+      - 'release/*'
+  workflow_dispatch:
+
 permissions:
-    id-token: write
-    contents: read
+  id-token: write
+  contents: read
 
 jobs:
-  aws-oidc-test:
+  oidc-debug:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v5
-        with:
-          role-to-assume: arn:aws:iam::668774618445:role/EventFlow-GitHubActions-Role
-          aws-region: ap-south-1
+      - name: Inspect OIDC claims
+        shell: bash
+        run: |
+          TOKEN=$(curl -s \
+            -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
+            "${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=sts.amazonaws.com" \
+            | jq -r '.value')
 
-      - name: Verify AWS identity
-        run: aws sts get-caller-identity
+          python -c "
+          import base64
+          import json
+
+          token = '''$TOKEN'''
+          payload = token.split('.')[1]
+          payload += '=' * (-len(payload) % 4)
+
+          claims = json.loads(
+              base64.urlsafe_b64decode(payload)
+          )
+
+          for key in [
+              'iss',
+              'aud',
+              'sub',
+              'repository',
+              'repository_id',
+              'repository_owner',
+              'repository_owner_id',
+              'ref',
+              'workflow',
+              'event_name'
+          ]:
+              print(f'{key}: {claims.get(key)}')
+          "
