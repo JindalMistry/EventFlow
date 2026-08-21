@@ -79,7 +79,7 @@ jobs:
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
           task-definition: .github/ecs/worker-task-definition.json
-          container-name: eventflow-worker
+          container-name: Worker
           image: 668774618445.dkr.ecr.ap-south-1.amazonaws.com/eventflow-worker:${{ github.sha }}
 
       - name: Deploy Worker
