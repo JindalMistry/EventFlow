@@ -36,19 +36,19 @@ jobs:
       - name: Build API Image
         run: |
           docker build \
-            -t 668774618445.dkr.ecr.ap-south-1.amazonaws.com/eventflow-api::${{ github.sha }} \
+            -t 668774618445.dkr.ecr.ap-south-1.amazonaws.com/eventflow-api:${{ github.sha }} \
             ./EventFlow.API
           
       - name: Push API Image to ECR
         run: |
-          docker push 668774618445.dkr.ecr.ap-south-1.amazonaws.com/eventflow-api::${{ github.sha }}
+          docker push 668774618445.dkr.ecr.ap-south-1.amazonaws.com/eventflow-api:${{ github.sha }}
         
       - name: Build Worker Image
         run: |
           docker build \
-            -t 668774618445.dkr.ecr.ap-south-1.amazonaws.com/eventflow-worker::${{ github.sha }} \
+            -t 668774618445.dkr.ecr.ap-south-1.amazonaws.com/eventflow-worker:${{ github.sha }} \
             ./EventFlow.Worker
 
       - name: Push Worker Image to ECR
         run: |
-          docker push 668774618445.dkr.ecr.ap-south-1.amazonaws.com/eventflow-worker::${{ github.sha }}
+          docker push 668774618445.dkr.ecr.ap-south-1.amazonaws.com/eventflow-worker:${{ github.sha }}
