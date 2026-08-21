@@ -73,6 +73,7 @@ jobs:
           service: API
           cluster: EventFlow
           wait-for-service-stability: true
+          wait-max-delay-seconds: 15
 
       - name: Render Worker task definition
         id: render-worker
@@ -89,3 +90,4 @@ jobs:
           service: Worker
           cluster: EventFlow
           wait-for-service-stability: true
+          wait-max-delay-seconds: 15
