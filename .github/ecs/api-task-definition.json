@@ -1,0 +1,80 @@
+{
+    "containerDefinitions": [
+        {
+            "name": "eventflow-api",
+            "image": "IMAGE_URI",
+            "cpu": 0,
+            "portMappings": [
+                {
+                    "containerPort": 8080,
+                    "hostPort": 8080,
+                    "protocol": "tcp",
+                    "name": "api",
+                    "appProtocol": "http"
+                }
+            ],
+            "essential": true,
+            "environment": [
+                {
+                    "name": "RabbitMQ__Port",
+                    "value": "5672"
+                },
+                {
+                    "name": "RabbitMQ__Host",
+                    "value": "rabbitmq"
+                },
+                {
+                    "name": "ASPNETCORE_ENVIRONMENT",
+                    "value": "Production"
+                },
+                {
+                    "name": "ASPNETCORE_URLS",
+                    "value": "http://+:8080"
+                }
+            ],
+            "mountPoints": [],
+            "volumesFrom": [],
+            "secrets": [
+                {
+                    "name": "ConnectionStrings__DefaultConnection",
+                    "valueFrom": "arn:aws:secretsmanager:ap-south-1:668774618445:secret:eventflow/database-i2oRgZ:ConnectionStrings__DefaultConnection::"
+                },
+                {
+                    "name": "Jwt__Secret",
+                    "valueFrom": "arn:aws:secretsmanager:ap-south-1:668774618445:secret:eventflow/api-iWMXLZ:Jwt__Secret::"
+                },
+                {
+                    "name": "RabbitMQ__Password",
+                    "valueFrom": "arn:aws:secretsmanager:ap-south-1:668774618445:secret:rabbitmq_secrets-CIDPxK:RABBITMQ_DEFAULT_PASS::"
+                },
+                {
+                    "name": "RabbitMQ__Username",
+                    "valueFrom": "arn:aws:secretsmanager:ap-south-1:668774618445:secret:rabbitmq_secrets-CIDPxK:RABBITMQ_DEFAULT_USER::"
+                }
+            ],
+            "logConfiguration": {
+                "logDriver": "awslogs",
+                "options": {
+                    "awslogs-group": "/ecs/EventFlow-API",
+                    "awslogs-create-group": "true",
+                    "awslogs-region": "ap-south-1",
+                    "awslogs-stream-prefix": "ecs"
+                }
+            },
+            "systemControls": []
+        }
+    ],
+    "family": "EventFlow-API",
+    "taskRoleArn": "arn:aws:iam::668774618445:role/EventFlowECSTaskRole",
+    "executionRoleArn": "arn:aws:iam::668774618445:role/EventFlowECSTaskExecutionRole",
+    "networkMode": "awsvpc",
+    "runtimePlatform": {
+        "cpuArchitecture": "X86_64",
+        "operatingSystemFamily": "LINUX"
+    },
+    "requiresCompatibilities": [
+        "FARGATE"
+    ],
+    "cpu": "256",
+    "memory": "512"
+}
