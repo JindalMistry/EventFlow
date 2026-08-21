@@ -57,3 +57,35 @@ jobs:
       - name: Push Worker Image to ECR
         run: |
           docker push 668774618445.dkr.ecr.ap-south-1.amazonaws.com/eventflow-worker:${{ github.sha }}
+
+      - name: Render API task definition
+        id: render-api
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: .github/ecs/api-task-definition.json
+          container-name: eventflow-api
+          image: 668774618445.dkr.ecr.ap-south-1.amazonaws.com/eventflow-api:${{ github.sha }}
+      
+      - name: Deploy API
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v2
+        with:
+          task-definition: ${{ steps.render-api.outputs.task-definition }}
+          service: API
+          cluster: EventFlow
+          wait-for-service-stability: true
+
+      - name: Render Worker task definition
+        id: render-worker
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: .github/ecs/worker-task-definition.json
+          container-name: eventflow-worker
+          image: 668774618445.dkr.ecr.ap-south-1.amazonaws.com/eventflow-worker:${{ github.sha }}
+
+      - name: Deploy Worker
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v2
+        with:
+          task-definition: ${{ steps.render-worker.outputs.task-definition }}
+          service: Worker
+          cluster: EventFlow
+          wait-for-service-stability: true
