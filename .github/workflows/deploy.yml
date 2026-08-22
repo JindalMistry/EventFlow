@@ -11,7 +11,7 @@ permissions:
   contents: read
 
 jobs:
-  aws-oidc-test:
+  eventflow-deploy:
     runs-on: ubuntu-latest
 
     steps:

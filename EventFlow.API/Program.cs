@@ -86,28 +86,26 @@ builder.Services.AddRabbitMq(builder.Configuration);
 //CORS
 var policyName = "CORSPolicy";
 
-//var allowedOrigins = builder.Environment.IsDevelopment()
-//    ? new[]
-//    {
-//        "http://localhost:5173"
-//    }
-//    : new[]
-//    {
-//        "https://autohub-app-theta.vercel.app"
-//    };
+var allowedOrigins = builder.Environment.IsDevelopment()
+   ? new[]
+   {
+       "http://localhost:5173"
+   }
+   : new[]
+   {
+       "https://event-flow-app-six.vercel.app"
+   };
 
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(policyName, policy =>
     {
         policy
-            .AllowAnyOrigin()
+            .WithOrigins(allowedOrigins)
             .AllowAnyHeader()
             .AllowAnyMethod();
     });
 });
-
-
 
 
 var app = builder.Build();
